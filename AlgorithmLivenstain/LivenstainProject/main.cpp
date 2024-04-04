@@ -1,11 +1,8 @@
 #include <iostream>
 #include<cassert>
 #include<vector>
-#include<algorithm>
 #include<numeric>
 #include<memory>
-
-const size_t MEMORY = 1024; // 1KB
 
 template<typename T>
 typename T::size_type LevenshteinDistanceMemory(const T &source,
@@ -18,9 +15,7 @@ typename T::size_type LevenshteinDistanceMemory(const T &source,
     const std::unique_ptr<TSizeType> min_size(new TSizeType(source.size())), max_size(new TSizeType(target.size()));
     std::unique_ptr<std::vector<TSizeType>> lev_dist(new std::vector<TSizeType>(*min_size.get() + 1));
 
-    for (TSizeType i = 0; i <= *min_size.get(); ++i) {
-        (*lev_dist.get())[i] = i;
-    }
+    std::iota(lev_dist.get()->begin(), lev_dist.get()->end(), 0);
 
     for (TSizeType j = 1; j <= *max_size.get(); ++j) {
         TSizeType previous_diagonal = (*lev_dist.get())[0], previous_diagonal_save;
@@ -42,9 +37,12 @@ typename T::size_type LevenshteinDistanceMemory(const T &source,
 
 void test_func()
 {
-    assert(LevenshteinDistance<std::string>("biba", "boba") == 1);
-    assert(LevenshteinDistance<std::string>("avstria", "avstralia") == 2);
-    assert(LevenshteinDistance<std::string>("kotik", "skotina") == 3);
+    assert(LevenshteinDistanceMemory<std::string>("ARMA", "ALKATRAS") == 6);
+    assert(LevenshteinDistanceMemory<std::string>("b", "") == 1);
+    assert(LevenshteinDistanceMemory<std::string>("ammmmmmmooooooooogggggggggguuuuuuuuuussssssss", "kalahmatkadakldkqwdjqfjsdhjldhfqklfwfhlhfejkwrflwnfhkwejukoikjhefndwzs") == 66);
+    assert(LevenshteinDistanceMemory<std::string>("biba", "boba") == 1);
+    assert(LevenshteinDistanceMemory<std::string>("avstria", "avstralia") == 2);
+    assert(LevenshteinDistanceMemory<std::string>("kotik", "skotina") == 3);
     std::cout << "Tests Success!\n";
 }
 
